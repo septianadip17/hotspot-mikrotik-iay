@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terputus</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <div class="card" style="text-align: center;">
+    <div class="brand" style="color: #ff416c;">OFFLINE</div>
+
+    <p style="margin-bottom: 20px; color: var(--text-muted);">
+      Koneksi internet Anda telah diputuskan.<br>
+      Terima kasih telah menggunakan layanan kami.
+    </p>
+
+    <div class="stats-grid">
+      <div class="stat-box">
+        <span class="stat-label">Total Waktu</span>
+        <span class="stat-value">$(uptime)</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">Pemakaian Data</span>
+        <span class="stat-value">$(bytes-out-nice)</span>
+      </div>
+    </div>
+
+    <form action="$(link-login)" name="login" method="post">
+      <button type="submit" class="btn-primary">LOGIN KEMBALI</button>
+    </form>
+  </div>
+
+</body>
+
+</html>
