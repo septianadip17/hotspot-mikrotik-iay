@@ -16,7 +16,6 @@
   <style>
     .toast.success {
       background: rgba(46, 204, 113, 0.9);
-      /* Warna Hijau */
       border: 1px solid rgba(255, 255, 255, 0.3);
     }
   </style>
@@ -74,7 +73,17 @@
       <input type="hidden" name="erase-cookie" value="on">
       <button type="submit" class="btn-danger">LOGOUT</button>
     </form>
+    <form action="$(link-logout)" name="logout" method="post" style="display:none;">
+      <input type="hidden" name="erase-cookie" value="on">
+    </form>
 
+    <script>
+      window.mikrotikData = {
+        sisaKuota: "$(remain-bytes-total)",
+        sisaWaktu: "$(session-time-left)",
+        linkLogout: "$(link-logout)"
+      };
+    </script>
   </div>
 
   <script src="js/status.js"></script>

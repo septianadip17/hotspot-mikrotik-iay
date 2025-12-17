@@ -8,7 +8,6 @@
     --neon-blue: #00f3ff;
     --neon-purple: #bc13fe;
     --neon-green: #2ecc71;
-    /* Warna baru untuk Trial */
     --text-main: #ffffff;
     --text-muted: #aaaaaa;
 }
@@ -71,8 +70,7 @@ body {
 
 .hero-image {
     width: 100%;
-    max-width: 180px;
-    /* Diperkecil sedikit agar proporsional */
+    max-width: 270px;
     height: auto;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);

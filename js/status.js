@@ -1,73 +1,94 @@
-/* js/status.js */
+document.addEventListener("DOMContentLoaded", function () {
+  updateGreeting();
+  if (!checkAutoLogout()) {
+    setTimeout(function () {
+      showToast("Login Berhasil! Koneksi Aman.", "success");
+    }, 500);
+  }
+});
 
-function parseMikrotikTime(timeStr) {
-  let isLow = false;
-
-  if (timeStr.indexOf("d") === -1 && timeStr.indexOf("h") === -1) {
-    let parts = timeStr.split("m");
-    if (parts.length > 1) {
-      let minutes = parseInt(parts[0]);
-      if (minutes <= 5) isLow = true; // Warning jika di bawah 5 menit
-    } else if (timeStr.indexOf("s") !== -1) {
-      isLow = true; // Warning jika tinggal detik
-    }
+// --- FUNGSI AUTO LOGOUT (JIKA HABIS) ---
+function checkAutoLogout() {
+  var data = window.mikrotikData;
+  if (!data) return false;
+  var kuotaHabis = false;
+  var waktuHabis = false;
+  if (
+    data.sisaKuota &&
+    (data.sisaKuota === "0" || data.sisaKuota.startsWith("0 B"))
+  ) {
+    kuotaHabis = true;
   }
 
-  return isLow;
-}
-
-// Fungsi Parse Data (Cek jika kuota < 50MiB)
-function parseMikrotikBytes(byteStr) {
-  // Format Mikrotik: 50.5 MiB, 1.2 GiB, 500 KiB
-  if (byteStr.indexOf("MiB") !== -1) {
-    let value = parseFloat(byteStr);
-    if (value < 50) return true; // Warning jika di bawah 50 MiB
+  // checking time
+  if (data.sisaWaktu === "0s" || data.sisaWaktu === "00:00:00") {
+    waktuHabis = true;
   }
-  if (byteStr.indexOf("KiB") !== -1) return true; // Warning jika sisa KiB
+
+  // EKSEKUSI LOGOUT
+  if (kuotaHabis || waktuHabis) {
+    console.log("Paket habis, melakukan auto-logout...");
+    showToast("Paket Habis! Mengalihkan ke Logout...", "error");
+    setTimeout(function () {
+      document.logout.submit();
+    }, 1500);
+
+    return true;
+  }
+
   return false;
 }
 
-// Fungsi Menampilkan Toast Notification
-function showToast(message) {
-  const container = document.getElementById("toast-container");
+// --- FUNGSI GREETING (SAPAAN) ---
+function updateGreeting() {
+  var greetingElement = document.getElementById("greeting-text");
+  var hour = new Date().getHours();
+  var text = "Halo,";
 
-  // Buat elemen toast baru
-  const toast = document.createElement("div");
-  toast.className = "toast show";
-  toast.innerHTML = `
-        <div class="toast-icon">⚠️</div>
-        <div class="toast-message">${message}</div>
-    `;
+  if (hour >= 5 && hour < 11) {
+    text = "Selamat Pagi,";
+  } else if (hour >= 11 && hour < 15) {
+    text = "Selamat Siang,";
+  } else if (hour >= 15 && hour < 18) {
+    text = "Selamat Sore,";
+  } else {
+    text = "Selamat Malam,";
+  }
 
-  container.appendChild(toast);
-
-  // Hapus otomatis setelah 5 detik
-  setTimeout(() => {
-    toast.classList.remove("show");
-    setTimeout(() => toast.remove(), 500);
-  }, 5000);
+  if (greetingElement) {
+    greetingElement.innerText = text;
+  }
 }
 
-// Main Logic saat Status Page Load
-document.addEventListener("DOMContentLoaded", function () {
-  const timeElem = document.getElementById("remain-time");
-  const bytesElem = document.getElementById("remain-bytes");
-
-  // Cek Waktu
-  if (timeElem) {
-    let timeVal = timeElem.innerText;
-    if (parseMikrotikTime(timeVal)) {
-      timeElem.classList.add("critical-value");
-      showToast("Perhatian! Waktu sesi Anda tinggal sebentar lagi.");
-    }
+// --- FUNGSI TOAST NOTIFICATION ---
+function showToast(message, type) {
+  var container = document.getElementById("toast-container");
+  var toast = document.createElement("div");
+  toast.className = "toast";
+  if (type === "success") {
+    toast.classList.add("success");
   }
 
-  // Cek Kuota
-  if (bytesElem) {
-    let bytesVal = bytesElem.innerText;
-    if (parseMikrotikBytes(bytesVal)) {
-      bytesElem.classList.add("critical-value");
-      showToast("Perhatian! Sisa kuota data Anda menipis.");
-    }
-  }
-});
+  var icon = type === "success" ? "✅" : "⚠️";
+
+  toast.innerHTML = `
+        <span class="toast-icon">${icon}</span>
+        <span>${message}</span>
+    `;
+
+  // Masukkan ke container
+  container.appendChild(toast);
+
+  // animation trigger
+  requestAnimationFrame(() => {
+    toast.classList.add("show");
+  });
+
+  // animation gone
+  setTimeout(function () {
+    toast.classList.remove("show");
+    setTimeout(function () {
+      toast.remove();
+    }, 500);
+  }, 3000);
+}
