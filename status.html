@@ -6,16 +6,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="assets/robots.webp">
 
-  $(if refresh-timeout)
-  <meta http-equiv="refresh" content="$(refresh-timeout-secs)">
-  $(endif)
-
   <title>Status Hotspot</title>
   <link rel="stylesheet" href="css/style.css">
 
   <style>
+    /* Tambahan warna untuk Warning (Kuning/Orange) */
     .toast.success {
       background: rgba(46, 204, 113, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .toast.warning {
+      background: rgba(255, 165, 0, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .toast.error {
+      background: rgba(255, 65, 108, 0.9);
       border: 1px solid rgba(255, 255, 255, 0.3);
     }
   </style>

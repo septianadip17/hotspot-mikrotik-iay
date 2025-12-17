@@ -1,62 +1,65 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // 1. Jalankan fitur sapaan waktu (Pagi/Siang/Sore)
   updateGreeting();
-
-  // 2. Jalankan timer hitung mundur
   startLiveTimer();
 
-  // 3. Tampilkan notifikasi sukses (hijau)
+  // Notif awal saat masuk
   setTimeout(function () {
-    showToast("Berhasil terhubung! Koneksi aman.", "success");
+    showToast("Status Aktif. Timer berjalan realtime.", "success");
   }, 500);
 });
 
-// --- LOGIKA HITUNG MUNDUR (LIVE TIMER) ---
+var warningShown = false; 
+
+// --- LOGIKA HITUNG MUNDUR ---
 function startLiveTimer() {
-  // Ambil data dari HTML
   var data = window.mikrotikData;
   var elemenWaktu = document.getElementById("remain-time");
 
-  // Validasi data (Pastikan HTML mengirim sisaWaktuDetik)
   if (!data || !data.sisaWaktuDetik) return;
 
-  // Ubah ke angka (integer)
   var timeLeft = parseInt(data.sisaWaktuDetik);
 
-  // Jika unlimited atau error, set teks Unlimited
+  // Jika unlimited
   if (isNaN(timeLeft) || timeLeft <= 0) {
     if (elemenWaktu) elemenWaktu.innerText = "Unlimited";
     return;
   }
 
-  console.log("Sisa waktu awal: " + timeLeft + " detik");
-
-  // Update tampilan awal langsung (tanpa nunggu 1 detik)
+  // Update tampilan awal
   if (elemenWaktu) elemenWaktu.innerText = formatWaktu(timeLeft);
 
-  // Mulai Loop Interval (Setiap 1 Detik)
   var countdown = setInterval(function () {
-    timeLeft--; // Kurangi 1 detik
+    timeLeft--;
 
-    // Update teks di layar
     if (elemenWaktu) {
       elemenWaktu.innerText = formatWaktu(timeLeft);
+      if (timeLeft < 60) {
+        elemenWaktu.style.color = "#ff416c";
+        elemenWaktu.style.textShadow = "0 0 5px rgba(255, 65, 108, 0.5)";
+      }
     }
 
-    // --- TITIK KRISIS (AUTO LOGOUT) ---
-    // Jika waktu sisa 2 detik atau kurang, paksa logout
-    if (timeLeft <= 2) {
+    // --- PERINGATAN 3 MENIT (180 Detik) ---
+    if (timeLeft <= 180 && timeLeft > 170 && !warningShown) {
+      showToast("⚠️ Waktu tinggal 3 Menit! Siapkan voucher baru.", "warning");
+      warningShown = true; // Kunci agar tidak spam notif
+    }
+
+    // --- PERINGATAN KRITIS (10 Detik) ---
+    if (timeLeft === 10) {
+      showToast("Waktu habis! Mengalihkan ke halaman Login...", "error");
+    }
+
+    // --- AUTO LOGOUT AMAN (5 Detik) ---
+    if (timeLeft <= 5) {
       clearInterval(countdown);
       forceLogout();
     }
   }, 1000);
 }
 
-// --- FUNGSI FORMAT TAMPILAN (INDONESIA) ---
-// Mengubah angka detik (misal 3665) jadi teks "1j 1m 5d"
 function formatWaktu(seconds) {
   if (seconds < 0) return "Habis";
-
   var jam = Math.floor(seconds / 3600);
   var sisaDetik = seconds % 3600;
   var menit = Math.floor(sisaDetik / 60);
@@ -64,40 +67,28 @@ function formatWaktu(seconds) {
 
   var hasil = "";
   if (jam > 0) {
-    hasil += jam + "j ";
-    hasil += menit + "m ";
-    hasil += det + "d";
+    hasil += jam + "j " + menit + "m " + det + "d";
   } else if (menit > 0) {
-    hasil += menit + "m ";
-    hasil += det + "d";
+    hasil += menit + "m " + det + "d";
   } else {
     hasil += det + " detik";
   }
-
   return hasil;
 }
 
-// --- FUNGSI PAKSA LOGOUT ---
 function forceLogout() {
-  showToast("Waktu Habis! Mengalihkan ke Logout...", "error");
-
-  // Tunggu 1.5 detik agar user sempat baca notifikasi merah
-  setTimeout(function () {
-    if (document.logout) {
-      document.logout.submit();
-    } else {
-      // Fallback jika form tidak ditemukan
-      window.location.href = window.mikrotikData.linkLogout;
-    }
-  }, 1500);
+  if (document.logout) {
+    document.logout.submit();
+  } else {
+    window.location.href = window.mikrotikData.linkLogout;
+  }
 }
 
-// --- FITUR GREETING (SAPAAN) ---
+// --- UTILS (Greeting & Toast) ---
 function updateGreeting() {
   var greetingElement = document.getElementById("greeting-text");
   var hour = new Date().getHours();
   var text = "Halo,";
-
   if (hour >= 5 && hour < 11) text = "Selamat Pagi,";
   else if (hour >= 11 && hour < 15) text = "Selamat Siang,";
   else if (hour >= 15 && hour < 18) text = "Selamat Sore,";
@@ -106,22 +97,28 @@ function updateGreeting() {
   if (greetingElement) greetingElement.innerText = text;
 }
 
-// --- FITUR TOAST NOTIFICATION ---
 function showToast(message, type) {
   var container = document.getElementById("toast-container");
   if (!container) return;
 
   var toast = document.createElement("div");
-  toast.className = "toast " + (type === "success" ? "success" : "");
-  var icon = type === "success" ? "✅" : "⚠️";
+  var typeClass = type || "success";
+  toast.className = "toast " + typeClass;
+
+  var icon = "✅";
+  if (type === "warning") icon = "⚠️";
+  if (type === "error") icon = "⛔";
 
   toast.innerHTML = `<span class="toast-icon">${icon}</span><span>${message}</span>`;
   container.appendChild(toast);
 
   requestAnimationFrame(() => toast.classList.add("show"));
 
+  // Durasi notif: Warning tampil lebih lama (5 detik), lainnya 3 detik
+  var duration = type === "warning" ? 5000 : 3000;
+
   setTimeout(function () {
     toast.classList.remove("show");
     setTimeout(() => toast.remove(), 500);
-  }, 3000);
+  }, duration);
 }
