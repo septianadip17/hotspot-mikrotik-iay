@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/png" href="assets/robots.webp">
+</head>
+
+<body>
+
+  <div class="card" style="text-align: center;">
+    <div class="brand" style="color: #ff416c;">OOPS!</div>
+
+    <div class="image-wrapper">
+      <img src="assets/logout-logo.webp" alt="Error" class="hero-image" style="filter: hue-rotate(45deg);">
+    </div>
+
+    <div class="alert" style="display:block; margin-top:20px;">
+      $(error)
+    </div>
+
+    <p style="margin: 20px 0; color: var(--text-muted); font-size: 0.9rem;">
+      Terjadi kesalahan saat memproses permintaan Anda.
+    </p>
+
+    <form action="$(link-login)" name="login" method="post">
+      <button type="submit" class="btn-primary">KEMBALI KE LOGIN</button>
+    </form>
+  </div>
+
+</body>
+
+</html>
