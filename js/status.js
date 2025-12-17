@@ -1,18 +1,9 @@
 /* js/status.js */
 
-// Fungsi untuk Parsing Waktu Mikrotik (contoh: "1h 5m 20s" menjadi detik)
 function parseMikrotikTime(timeStr) {
-  // Mikrotik time format varies, this is a simple approximation check
-  // If it detects just "m" and "s" without "h" or "d", it might be low.
-
-  // Simplifikasi: Kita cek stringnya saja
   let isLow = false;
 
-  // Jika format hanya "Xs" (detik saja) atau "Xm Ys" (menit di bawah 5)
   if (timeStr.indexOf("d") === -1 && timeStr.indexOf("h") === -1) {
-    // Tidak ada hari dan jam, berarti sisa menit/detik
-
-    // Ambil angka depan (menit)
     let parts = timeStr.split("m");
     if (parts.length > 1) {
       let minutes = parseInt(parts[0]);
@@ -59,24 +50,23 @@ function showToast(message) {
 
 // Main Logic saat Status Page Load
 document.addEventListener("DOMContentLoaded", function () {
-  // Ambil nilai dari elemen HTML (yang diisi Mikrotik)
   const timeElem = document.getElementById("remain-time");
   const bytesElem = document.getElementById("remain-bytes");
 
   // Cek Waktu
   if (timeElem) {
-    let timeVal = timeElem.innerText; // Isinya misal "4m 20s"
+    let timeVal = timeElem.innerText;
     if (parseMikrotikTime(timeVal)) {
-      timeElem.classList.add("critical-value"); // Efek kedip merah
+      timeElem.classList.add("critical-value");
       showToast("Perhatian! Waktu sesi Anda tinggal sebentar lagi.");
     }
   }
 
   // Cek Kuota
   if (bytesElem) {
-    let bytesVal = bytesElem.innerText; // Isinya misal "10 MiB"
+    let bytesVal = bytesElem.innerText;
     if (parseMikrotikBytes(bytesVal)) {
-      bytesElem.classList.add("critical-value"); // Efek kedip merah
+      bytesElem.classList.add("critical-value");
       showToast("Perhatian! Sisa kuota data Anda menipis.");
     }
   }

@@ -4,49 +4,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+
   $(if refresh-timeout)
   <meta http-equiv="refresh" content="$(refresh-timeout-secs)">
   $(endif)
+
   <title>Status Hotspot</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
+  <div id="toast-container" class="toast-container"></div>
+
   <div class="card">
     <div class="brand">Status <span>Aktif</span></div>
 
     <div style="text-align:center; margin-bottom:20px;">
       <p class="stat-label">Halo, User:</p>
-      <h3 style="color:var(--text-main);">$(username)</h3>
+      <h3 style="color:var(--text-main); letter-spacing:1px;">$(username)</h3>
     </div>
 
     <div class="stats-grid">
       <div class="stat-box">
         <span class="stat-label">Sisa Waktu</span>
-        <span class="stat-value">$(session-time-left)</span>
+        <span id="remain-time" class="stat-value">$(session-time-left)</span>
       </div>
+
       <div class="stat-box">
         <span class="stat-label">Sisa Kuota</span>
-        <span class="stat-value">$(remain-bytes-total)</span>
+        <span id="remain-bytes" class="stat-value">$(remain-bytes-total)</span>
       </div>
+
       <div class="stat-box">
         <span class="stat-label">Download</span>
-        <span class="stat-value">$(bytes-in)</span>
+        <span class="stat-value">$(bytes-in-nice)</span>
       </div>
+
       <div class="stat-box">
         <span class="stat-label">Upload</span>
-        <span class="stat-value">$(bytes-out)</span>
+        <span class="stat-value">$(bytes-out-nice)</span>
       </div>
+    </div>
+
+    <div style="text-align:center; font-size:0.7rem; color:#666; margin-bottom:15px;">
+      Data diperbarui setiap $(refresh-timeout)
     </div>
 
     <form action="$(link-logout)" name="logout" method="post">
       <input type="hidden" name="erase-cookie" value="on">
-      <button type="submit" class="btn-danger">LOGOUT / PUTUSKAN</button>
+      <button type="submit" class="btn-danger">LOGOUT</button>
     </form>
 
   </div>
 
+  <script src="js/status.js"></script>
 </body>
 
 </html>
