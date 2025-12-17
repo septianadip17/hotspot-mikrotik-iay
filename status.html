@@ -68,23 +68,23 @@
     <div style="text-align:center; font-size:0.7rem; color:#666; margin-bottom:15px;">
       Data diperbarui setiap $(refresh-timeout)
     </div>
-    <button type="submit" class="btn-danger">LOGOUT</button>
 
-    <form action="$(link-logout)" name="logout" method="post" style="display:none;">
+    <form action="$(link-logout)" name="logout" method="post">
       <input type="hidden" name="erase-cookie" value="on">
+      <button type="submit" class="btn-danger">LOGOUT</button>
     </form>
 
-    <script>
-      window.mikrotikData = {
-        sisaKuota: "$(remain-bytes-total)",
-        sisaWaktuDetik: "$(session-time-left-secs)",
-        linkLogout: "$(link-logout)"
-      };
-    </script>
-    <script src="js/status.js"></script>
-</body>
+  </div>
 
-</html>
+  <script>
+    window.mikrotikData = {
+      sisaKuota: "$(remain-bytes-total)",
+      sisaWaktuDetik: "$(session-time-left-secs)",
+      linkLogout: "$(link-logout)"
+    };
+  </script>
+
+  <script src="js/status.js"></script>
 </body>
 
 </html>
