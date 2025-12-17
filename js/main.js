@@ -36,7 +36,6 @@ function switchTab(mode) {
 
 // Dijalankan saat halaman selesai dimuat
 document.addEventListener("DOMContentLoaded", function () {
-  // Fokus otomatis ke input username/voucher
   var inputUser = document.getElementById("input-user");
   if (inputUser) {
     inputUser.focus();

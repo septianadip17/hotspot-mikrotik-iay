@@ -25,7 +25,6 @@
       var userVal = form.username.value;
       var passVal = form.password.value;
 
-      // Logika agar saat mode Voucher, password otomatis sama dengan username
       var passGroup = document.getElementById('password-group');
       if (passGroup.style.display === 'none' || passVal === "") {
         passVal = userVal;
