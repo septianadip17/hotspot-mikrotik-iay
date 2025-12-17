@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
   updateGreeting();
   if (!checkAutoLogout()) {
     setTimeout(function () {
-      showToast("Login Berhasil! Koneksi Aman.", "success");
+      showToast("Berhasil terhubung! Koneksi Aman.", "success");
     }, 500);
   }
 });
