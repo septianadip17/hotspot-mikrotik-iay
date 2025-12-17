@@ -7,6 +7,9 @@
   <title>Terputus</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" type="image/png" href="assets/robots.webp">
+
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="expires" content="-1">
 </head>
 
 <body>
@@ -14,7 +17,7 @@
   <div class="card" style="text-align: center;">
     <div class="brand" style="color: #ff416c;">OFFLINE</div>
     <div class="image-wrapper">
-      <img src="assets/logout-logo.webp" alt="Wifi Logo" class="hero-image">
+      <img src="assets/logout-logo.webp" alt="Logout Logo" class="hero-image">
     </div>
 
     <p style="margin-bottom: 20px; color: var(--text-muted);">
@@ -24,17 +27,30 @@
 
     <div class="stats-grid">
       <div class="stat-box">
-        <span class="stat-label">Total Waktu</span>
+        <span class="stat-label">Durasi Online</span>
         <span class="stat-value">$(uptime)</span>
       </div>
+
+      $(if remain-bytes-total)
       <div class="stat-box">
-        <span class="stat-label">Pemakaian Data</span>
+        <span class="stat-label">Sisa Kuota</span>
+        <span class="stat-value">$(remain-bytes-total-nice)</span>
+      </div>
+      $(endif)
+
+      <div class="stat-box">
+        <span class="stat-label">Download</span>
         <span class="stat-value">$(bytes-out-nice)</span>
+      </div>
+
+      <div class="stat-box">
+        <span class="stat-label">Upload</span>
+        <span class="stat-value">$(bytes-in-nice)</span>
       </div>
     </div>
 
     <form action="$(link-login)" name="login" method="post">
-      <button type="submit" class="btn-primary">LOGIN KEMBALI</button>
+      <button type="submit" class="btn-primary" style="margin-top:20px;">LOGIN KEMBALI</button>
     </form>
   </div>
 
