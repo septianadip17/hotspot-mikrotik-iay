@@ -1,52 +1,44 @@
-/* js/main.js */
-
-// Fungsi Ganti Tab (Voucher vs Member)
+// Fungsi untuk ganti Tab (Voucher/Member)
 function switchTab(mode) {
-  const voucherBtn = document.getElementById("btn-voucher");
-  const memberBtn = document.getElementById("btn-member");
-  const passGroup = document.getElementById("password-group");
-  const userLabel = document.getElementById("label-user");
-  const userInput = document.getElementById("input-user");
+  var inputPassGroup = document.getElementById("password-group");
+  var labelUser = document.getElementById("label-user");
+  var btnVoucher = document.getElementById("btn-voucher");
+  var btnMember = document.getElementById("btn-member");
+  var inputUser = document.getElementById("input-user");
+  var inputPass = document.getElementById("input-pass");
 
   if (mode === "voucher") {
-    // Mode Voucher: Aktifkan tombol, sembunyikan password UI
-    voucherBtn.classList.add("active");
-    memberBtn.classList.remove("active");
-    passGroup.style.display = "none"; // Sembunyikan input password
-    userLabel.innerText = "Kode Voucher";
-    userInput.placeholder = "Masukkan Kode Voucher";
+    // Tampilan Voucher
+    inputPassGroup.style.display = "none";
+    labelUser.innerText = "Kode Voucher";
+    inputUser.placeholder = "Masukkan Kode";
+
+    // Kosongkan password agar logika login menganggap ini voucher
+    inputPass.value = "";
+
+    btnVoucher.classList.add("active");
+    btnMember.classList.remove("active");
+
+    // Fokus balik ke input user
+    inputUser.focus();
   } else {
-    // Mode Member: Tampilkan password UI
-    memberBtn.classList.add("active");
-    voucherBtn.classList.remove("active");
-    passGroup.style.display = "block"; // Munculkan input password
-    userLabel.innerText = "Username";
-    userInput.placeholder = "Username Member";
+    // Tampilan Member
+    inputPassGroup.style.display = "block";
+    labelUser.innerText = "Username";
+    inputUser.placeholder = "Username Member";
+
+    btnMember.classList.add("active");
+    btnVoucher.classList.remove("active");
+
+    inputUser.focus();
   }
 }
 
-// Logic saat tombol Connect ditekan
-function doLogin() {
-  const mode = document.querySelector(".tab-btn.active").id;
-  const userInput = document.getElementById("input-user");
-  const passInput = document.getElementById("input-pass");
-
-  // Jika Mode Voucher, isi password sama dengan username (User = Pass)
-  if (mode === "btn-voucher") {
-    passInput.value = userInput.value;
+// Dijalankan saat halaman selesai dimuat
+document.addEventListener("DOMContentLoaded", function () {
+  // Fokus otomatis ke input username/voucher
+  var inputUser = document.getElementById("input-user");
+  if (inputUser) {
+    inputUser.focus();
   }
-
-  document.login.submit();
-  return false;
-}
-
-// Cek Error Message saat halaman load
-window.onload = function () {
-  const errorBox = document.getElementById("error-box");
-  const errorText = document.getElementById("error-content").innerText;
-
-  // Jika ada error dari Mikrotik (bukan kosong atau variabel default)
-  if (errorText != "" && errorText != "$(error)") {
-    errorBox.style.display = "block";
-  }
-};
+});

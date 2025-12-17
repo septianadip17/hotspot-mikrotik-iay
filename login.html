@@ -17,21 +17,20 @@
     <input type="hidden" name="dst" value="$(link-orig)" />
     <input type="hidden" name="popup" value="true" />
   </form>
+
   <script src="js/md5.js"></script>
   <script>
     function doLogin() {
-      // Ambil form utama
       var form = document.login;
       var userVal = form.username.value;
       var passVal = form.password.value;
 
-      // Logika Tab Voucher: Jika password hidden/kosong, anggap Username = Password
+      // Logika agar saat mode Voucher, password otomatis sama dengan username
       var passGroup = document.getElementById('password-group');
       if (passGroup.style.display === 'none' || passVal === "") {
         passVal = userVal;
       }
 
-      // Set nilai ke form pengiriman (sendin)
       document.sendin.username.value = userVal;
       document.sendin.password.value = hexMD5('$(chap-id)' + passVal + '$(chap-challenge)');
       document.sendin.submit();
@@ -42,8 +41,9 @@
 
   <div class="card">
     <div class="brand">iay<span>Net</span></div>
+
     <div class="image-wrapper">
-      <img src="robots.webp" alt="Wifi Logo" class="hero-image">
+      <img src="assets/robots.webp" alt="Wifi Logo" class="hero-image">
     </div>
 
     <div class="alert" id="error-box" $(if error)style="display:block" $(endif)>
@@ -56,7 +56,6 @@
     </div>
 
     <form name="login" action="$(link-login-only)" method="post" $(if chap-id) onSubmit="return doLogin()" $(endif)>
-
       <input type="hidden" name="dst" value="$(link-orig)" />
       <input type="hidden" name="popup" value="true" />
 
@@ -73,13 +72,12 @@
 
       <button type="submit" class="btn-primary">CONNECT</button>
     </form>
-
     $(if trial == 'yes')
-    <div style="margin-top: 15px;">
-      <p class="stat-label">Ingin mencoba dulu?</p>
-      <a href="$(link-login-only)?dst=$(link-orig-esc)&amp;username=T-$(mac-esc)" class="btn-primary"
-        style="background-color: #2ecc71; text-decoration: none; display: block; line-height: 40px;">
-        COBA GRATIS (TRIAL)
+    <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+      <p class="stat-label" style="margin-bottom: 5px;">Belum punya kode?</p>
+
+      <a href="$(link-login-only)?dst=$(link-orig-esc)&amp;username=T-$(mac-esc)" class="btn-trial">
+        Coba Gratis (Trial)
       </a>
     </div>
     $(endif)
@@ -89,40 +87,7 @@
     </div>
   </div>
 
-  <script>
-    function switchTab(mode) {
-      var inputPassGroup = document.getElementById('password-group');
-      var labelUser = document.getElementById('label-user');
-      var btnVoucher = document.getElementById('btn-voucher');
-      var btnMember = document.getElementById('btn-member');
-      var inputUser = document.getElementById('input-user');
-      var inputPass = document.getElementById('input-pass');
-
-      if (mode === 'voucher') {
-        // Tampilan Voucher
-        inputPassGroup.style.display = 'none';
-        labelUser.innerText = "Kode Voucher";
-        inputUser.placeholder = "Masukkan Kode";
-
-        // Hapus password agar logika doLogin mengisi otomatis dengan username
-        inputPass.value = "";
-
-        btnVoucher.classList.add('active');
-        btnMember.classList.remove('active');
-      } else {
-        // Tampilan Member
-        inputPassGroup.style.display = 'block';
-        labelUser.innerText = "Username";
-        inputUser.placeholder = "Username Member";
-
-        btnMember.classList.add('active');
-        btnVoucher.classList.remove('active');
-      }
-    }
-
-    // Fokus otomatis ke input saat halaman dimuat
-    document.getElementById('input-user').focus();
-  </script>
+  <script src="js/main.js"></script>
 </body>
 
 </html>

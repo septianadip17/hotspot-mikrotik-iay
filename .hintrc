@@ -13,6 +13,15 @@
           "backdrop-filter"
         ]
       }
+    ],
+    "meta-charset-utf-8": "off",
+    "axe/language": "off",
+    "meta-viewport": "off",
+    "axe/text-alternatives": [
+      "default",
+      {
+        "document-title": "off"
+      }
     ]
   }
 }

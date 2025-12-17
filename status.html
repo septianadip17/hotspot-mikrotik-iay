@@ -5,11 +5,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="assets/robots.webp">
+
   $(if refresh-timeout)
   <meta http-equiv="refresh" content="$(refresh-timeout-secs)">
   $(endif)
+
   <title>Status Hotspot</title>
   <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    .toast.success {
+      background: rgba(46, 204, 113, 0.9);
+      /* Warna Hijau */
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+  </style>
 </head>
 
 <body>
@@ -18,12 +28,14 @@
 
   <div class="card">
     <div class="brand">Status <span>Aktif</span></div>
+
     <div class="image-wrapper">
       <img src="assets/status-online-system.webp" alt="Wifi Logo" class="hero-image">
     </div>
+
     <div style="text-align:center; margin-bottom:20px;">
-      <p class="stat-label">Halo, User:</p>
-      <h3 style="color:var(--text-main); letter-spacing:1px;">$(username)</h3>
+      <p class="stat-label" id="greeting-text">Halo,</p>
+      <h3 style="color:var(--text-main); letter-spacing:1px; margin-top:5px;">$(username)</h3>
     </div>
 
     <div class="stats-grid">
@@ -34,7 +46,13 @@
 
       <div class="stat-box">
         <span class="stat-label">Sisa Kuota</span>
-        <span id="remain-bytes" class="stat-value">$(remain-bytes-total)</span>
+        <span id="remain-bytes" class="stat-value">
+          $(if remain-bytes-total)
+          $(remain-bytes-total)
+          $(else)
+          Unlimited
+          $(endif)
+        </span>
       </div>
 
       <div class="stat-box">
