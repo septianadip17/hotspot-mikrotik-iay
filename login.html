@@ -26,8 +26,12 @@
       var passVal = form.password.value;
 
       var passGroup = document.getElementById('password-group');
-      if (passGroup.style.display === 'none' || passVal === "") {
-        passVal = userVal;
+      // Logic: Jika kolom password disembunyikan (mode voucher), samakan pass dengan user
+      if (passGroup.style.display === 'none' || passGroup.style.display === '') {
+        // Cek ulang computed style untuk safety, tapi logic dasar tetap sama
+        if (window.getComputedStyle(passGroup).display === 'none' || passVal === "") {
+          passVal = userVal;
+        }
       }
 
       document.sendin.username.value = userVal;
@@ -50,8 +54,9 @@
     </div>
 
     <div class="tabs">
-      <div id="btn-voucher" class="tab-btn active" onclick="switchTab('voucher')">VOUCHER</div>
-      <div id="btn-member" class="tab-btn" onclick="switchTab('member')">MEMBER</div>
+      <div id="btn-voucher" class="tab-btn" onclick="switchTab('voucher')">VOUCHER</div>
+
+      <div id="btn-member" class="tab-btn active" onclick="switchTab('member')">MEMBER</div>
     </div>
 
     <form name="login" action="$(link-login-only)" method="post" $(if chap-id) onSubmit="return doLogin()" $(endif)>
@@ -59,21 +64,23 @@
       <input type="hidden" name="popup" value="true" />
 
       <div class="form-group">
-        <label id="label-user" class="stat-label" style="text-align:left; margin-bottom:5px;">Kode Voucher</label>
-        <input type="text" id="input-user" name="username" class="form-control" value="$(username)" required
-          autocomplete="off" />
+        <label id="label-user" class="stat-label" style="text-align:left; margin-bottom:5px;">Username</label>
+
+        <input type="text" id="input-user" name="username" class="form-control" value="$(username)"
+          placeholder="Masukkan Username" required autocomplete="off" />
       </div>
 
-      <div class="form-group" id="password-group" style="display:none;">
+      <div class="form-group" id="password-group">
         <label class="stat-label" style="text-align:left; margin-bottom:5px;">Password</label>
-        <input type="password" id="input-pass" name="password" class="form-control" />
+        <input type="password" id="input-pass" name="password" class="form-control" placeholder="Masukkan Password" />
       </div>
 
       <button type="submit" class="btn-primary">CONNECT</button>
     </form>
+
     $(if trial == 'yes')
     <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
-      <p class="stat-label" style="margin-bottom: 5px;">Belum punya kode?</p>
+      <p class="stat-label" style="margin-bottom: 5px;">Belum punya akun?</p>
 
       <a href="$(link-login-only)?dst=$(link-orig-esc)&amp;username=T-$(mac-esc)" class="btn-trial">
         Coba Gratis (Trial)
